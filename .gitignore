@@ -1,0 +1,10 @@
+# Local tooling state, not part of the site
+.claude-flow/
+.impeccable/
+.playwright-mcp/
+.claude/
+
+# OS clutter
+.DS_Store
+Thumbs.db
+desktop.ini

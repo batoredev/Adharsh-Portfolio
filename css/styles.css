@@ -487,6 +487,16 @@ main { overflow-x: clip; } /* section glows bleed past the edges; never let them
   display: grid; gap: 18px; justify-items: start;
   padding: 6px 0 6px clamp(20px, 3vw, 36px); border-left: 1px solid var(--line-2);
 }
+/* A small round portrait, like a signature at the end of a letter */
+.contact-me { display: flex; align-items: center; gap: 14px; }
+.contact-photo {
+  flex: none; width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04), 0 10px 28px -10px rgba(111, 155, 255, 0.55);
+}
+.contact-me p { display: grid; gap: 2px; line-height: 1.35; }
+.contact-me strong { font-weight: 600; font-size: 15px; color: var(--ink); }
+.contact-me span { font-size: 13px; color: var(--ink-3); }
 .contact-note { font-size: 16px; line-height: 1.7; color: var(--ink-2); max-width: 36ch; }
 .mail-btn {
   display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px 14px 18px; border-radius: 999px;
@@ -512,6 +522,12 @@ main { overflow-x: clip; } /* section glows bleed past the edges; never let them
   display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
   font-size: 13px; color: var(--ink-3);
 }
+.footer-sep { margin-inline: 10px; opacity: 0.6; }
+.footer-credits {
+  font: inherit; color: var(--ink-3); background: none; border: 0; padding: 0 0 1px; cursor: pointer;
+  border-bottom: 1px solid var(--line); transition: color 0.25s, border-color 0.25s;
+}
+.footer-credits:hover, .footer-credits:focus-visible { color: var(--ink); border-color: var(--line-2); }
 .to-top { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); transition: color 0.25s; }
 .to-top:hover, .to-top:focus-visible { color: var(--ink); }
 

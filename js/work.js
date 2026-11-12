@@ -45,7 +45,7 @@
 
   /* ------------------------------------------------------------------
      2. Things I've written. Links and descriptions come from the actual
-     articles (Medium feed). Photos: Wikimedia Commons, credited per tile.
+     articles (Medium feed). Photos are credited in the footer's Image credits list.
      ------------------------------------------------------------------ */
   const C = (artist, license, page) => ({ artist, license, page });
   const WRITING = [
@@ -176,7 +176,6 @@
       steps: ['Gliptins (ligands)', 'DPP-4 (target)', 'Docking', 'Binding poses'],
       img: { src: 'assets/work/docking.jpg', w: 900, h: 956,
         alt: 'Ribbon model of a protein with a small-molecule inhibitor bound in its active site',
-        cap: 'A serine-protease inhibitor complex (DPP-4’s enzyme family) · illustrative, not from this study',
         credit: C('Enzymlogic', 'CC BY-SA 2.0', 'https://www.flickr.com/photos/101755654@N08/13329148744') },
       worked: ['A docking study of gliptins (DPP-4 inhibitors), done with a collaborator.', 'Shared on LinkedIn.'],
       links: [{ label: 'See the post on LinkedIn', href: LINKS.linkedin }] },
@@ -190,7 +189,7 @@
     summary: 'The analysis behind the seizure-detection paper. Approximate Entropy measures how predictable a signal is; seizures change that regularity, so the system watches EEG recordings for the change as it happens.',
     labels: ['Biomedical signals', 'Approximate Entropy', 'EEG', 'Real-time detection'],
     status: 'Co-authored paper · presented at ICCCNet 2024, Manchester Metropolitan University · published by Springer',
-    results: '98.63% accuracy · 96.54% sensitivity · 97.85% specificity (as reported in the paper)',
+    results: '98.63% accuracy · 96.54% sensitivity · 97.85% specificity',
     worked: [
       'Developed a real-time EEG-based seizure detection system using Approximate Entropy modelling.',
       'Explored what it could mean for catching neurological events early and for real-time monitoring.',
@@ -230,8 +229,8 @@
 
   const flowHTML = (steps, numbered) => `<ol class="flow${numbered ? ' flow--numbered' : ''}">${steps.map(([b, s], i) => `<li>${numbered ? `<i>${String(i + 1).padStart(2, '0')}</i>` : ''}<b>${esc(b)}</b><span>${esc(s)}</span></li>`).join('')}</ol>`;
   const openBtn = (id, label) => `<button class="note-open" type="button" data-work-open="${id}">${esc(label)} <span aria-hidden="true">→</span></button>`;
-  const photoHTML = (p) => `<figure class="mo-photo"><div class="mo-photo-frame"><img src="${p.src}" alt="${esc(p.alt)}" width="${p.w}" height="${p.h}" loading="lazy"></div><figcaption><span>${esc(p.cap)}</span><a class="tile-credit" href="${esc(p.credit.page)}" target="_blank" rel="noopener">Image: ${esc(p.credit.artist)} · ${esc(p.credit.license)}</a></figcaption></figure>`;
-  const plateHTML = (p) => `<figure class="plate"><div class="plate-paper"><img src="${p.src}" alt="${esc(p.cap)} from the R analysis" width="${p.w}" height="${p.h}" loading="lazy"></div><figcaption>${esc(p.cap)} · original plot from the R analysis</figcaption></figure>`;
+  const photoHTML = (p) => `<figure class="mo-photo"><div class="mo-photo-frame"><img src="${p.src}" alt="${esc(p.alt)}" width="${p.w}" height="${p.h}" loading="lazy"></div></figure>`;
+  const plateHTML = (p) => `<figure class="plate"><div class="plate-paper"><img src="${p.src}" alt="${esc(p.cap)}" width="${p.w}" height="${p.h}" loading="lazy"></div></figure>`;
 
   /* ------------------------------------------------------------------
      Render
@@ -249,9 +248,7 @@
           ${openBtn(f.id, f.openLabel)}
         </div>
       </div>
-      <div class="feat-figure reveal">${f.flow
-        ? `${flowHTML(f.flow, true)}<p class="fig-cap">How the prototype works · diagram</p>`
-        : `${eegSVG()}<p class="fig-cap">Illustration · not recorded data</p>`}</div>
+      <div class="feat-figure reveal">${f.flow ? flowHTML(f.flow, true) : eegSVG()}</div>
     </section>`;
 
   const tile = (w) => {
@@ -266,7 +263,7 @@
           <p class="tile-meta"><span>${esc(w.cat)}</span><span>${esc(platform)}</span></p>
           <h4 class="tile-title">${w.href ? `<a class="tile-stretch" href="${esc(w.href)}" target="_blank" rel="noopener">${esc(w.title)}</a>` : esc(w.title)}</h4>
           <p class="tile-desc">${esc(w.desc)}</p>
-          <div class="tile-foot">${link}<a class="tile-credit" href="${esc(w.credit.page)}" target="_blank" rel="noopener">Photo: ${esc(w.credit.artist)} · ${esc(w.credit.license)}</a></div>
+          ${link ? `<div class="tile-foot">${link}</div>` : ''}
         </div>
       </article>`;
   };
@@ -301,7 +298,6 @@
   const thumbOf = (m) => (m.img ? m.img.src : m.plates ? m.plates[0].src : '');
 
   const modelsFolder = () => `
-    <p class="pf-note">The plots are the originals from the R analyses; the numbers come straight from each project’s write-up.</p>
     <ul class="pf-list">${MODELS.map((m) => `
       <li class="pf-item${thumbOf(m) ? '' : ' no-thumb'}">
         ${thumbOf(m) ? `<button class="pf-thumb pf-thumb--paper" type="button" data-work-open="${m.id}" aria-label="Open notes: ${esc(m.short)}"><img src="${thumbOf(m)}" alt="" loading="lazy"></button>` : ''}
@@ -316,7 +312,6 @@
     </ul>`;
 
   const ideasFolder = () => `
-    <p class="pf-note">Ideas, not findings. None of these has been tested or published.</p>
     <ul class="pf-list">${IDEAS.map((x) => `
       <li class="pf-item">
         <span class="pf-thumb"><img src="${x.img}" alt="" loading="lazy"></span>
@@ -324,7 +319,7 @@
           <p class="mo-kicker pf-nature">${esc(x.nature)}</p>
           <h4 class="pf-title">${esc(x.title)}</h4>
           <p class="pf-text">${esc(x.text)}</p>
-          <p class="hy-foot">${x.status ? `<span class="hy-status">${esc(x.status)}</span>` : ''}<a class="tile-credit" href="${esc(x.credit.page)}" target="_blank" rel="noopener">Photo: ${esc(x.credit.artist)} · ${esc(x.credit.license)}</a></p>
+          ${x.status ? `<p class="hy-foot"><span class="hy-status">${esc(x.status)}</span></p>` : ''}
         </div>
       </li>`).join('')}
     </ul>`;
@@ -417,13 +412,13 @@
     const prev = DRAWER[(i - 1 + DRAWER.length) % DRAWER.length];
     const next = DRAWER[(i + 1) % DRAWER.length];
     let fig = '';
-    if (w.flow) fig = `<div class="pj-figure">${flowHTML(w.flow, true)}<p class="fig-cap">How the prototype works · diagram</p></div>`;
+    if (w.flow) fig = `<div class="pj-figure">${flowHTML(w.flow, true)}</div>`;
     else if (w.plates) fig = `<div class="pj-figure pj-figure--plates">${w.plates.map(plateHTML).join('')}</div>`;
-    else if (w.id === 'eeg') fig = `<figure class="pj-figure">${eegSVG()}<figcaption>Illustration · not recorded data</figcaption></figure>`;
+    else if (w.id === 'eeg') fig = `<figure class="pj-figure">${eegSVG()}</figure>`;
     else if (w.img) fig = `<div class="pj-figure pj-figure--photo">${photoHTML(w.img)}</div>`;
     const lede = w.origin ? `${w.summary} ${w.origin}` : w.summary;
     const list = `<section class="pj-block"><h4>What I worked on</h4><ul class="pj-list">${w.worked.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section>`;
-    const facts = [...(w.facts || []), ...(w.results ? [['Reported results', w.results, true]] : [])];
+    const facts = [...(w.facts || []), ...(w.results ? [['Results', w.results, true]] : [])];
     const factsHTML = facts.length ? `<dl class="pj-facts">${facts.map(([k, v, mono]) => `<div><dt>${esc(k)}</dt><dd${mono ? ' class="mono"' : ''}>${esc(v)}</dd></div>`).join('')}</dl>` : '';
     const links = w.links ? `<p class="pj-links">${w.links.map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} <span aria-hidden="true">↗</span></a>`).join('')}</p>` : '';
     const nav = `<nav class="pj-nav" aria-label="More work">
@@ -458,7 +453,35 @@
     }
   }
 
+  /* Image credits: one list in the footer instead of a credit under every photo.
+     The licences (CC BY / CC BY-SA) still need attribution, so it lives here. */
+  const ICON_IMG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 3.5 3 3-2.5L20 17"/></svg>';
+  const DOCKING = MODELS.find((m) => m.id === 'docking');
+  const CREDIT_GROUPS = [
+    { label: 'Writing', items: WRITING.map((w) => [w.title, w.credit]) },
+    { label: 'Hypotheses & ideas', items: IDEAS.map((x) => [x.title, x.credit]) },
+    { label: 'Projects', items: DOCKING && DOCKING.img ? [[DOCKING.title, DOCKING.img.credit]] : [] },
+  ].filter((g) => g.items.length);
+
+  function openCredits() {
+    const sheet = window.portfolioSheet;
+    if (!sheet) return;
+    const n = CREDIT_GROUPS.reduce((s, g) => s + g.items.length, 0);
+    sheet.open({
+      tint: '#8a6bff',
+      iconHTML: ICON_IMG,
+      kicker: `${n} images`,
+      title: 'Image credits',
+      bodyHTML: CREDIT_GROUPS.map((g) => `
+        <section class="sheet-group">
+          <h4>${esc(g.label)}</h4>
+          <ul>${g.items.map(([t, c]) => `<li><a class="it-t" href="${esc(c.page)}" target="_blank" rel="noopener">${esc(t)} ↗</a><span class="it-m">${esc(c.artist)} · ${esc(c.license)}</span></li>`).join('')}</ul>
+        </section>`).join(''),
+    });
+  }
+
   document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-credits]')) { openCredits(); return; }
     const nav = e.target.closest('[data-work-nav]');
     if (nav) { openWork(nav.dataset.workNav, nav.dataset.dir); return; }
     const opener = e.target.closest('[data-work-open]');
